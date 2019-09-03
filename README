@@ -1,0 +1,75 @@
+CSS 导入样式文件的方法  @import  link标签
+1、link标签
+常用用法：
+<link 
+ href="url路径"
+ rel="规定当前文档与被链接文档之间的关系" 
+ type="被链接文档的MIME类型"               （该属性最常见的 MIME 类型是 "text/css")
+ media="被链接文档将被显示在什么设备上">
+
+  media属性值
+    screen  计算机屏幕
+    tv      电视机类型设备
+    print       打印预览/打印页面
+    projection  放映机
+    handheld    手持设备
+    all      所有设备
+  
+
+  rel属性值
+    icon        图标
+    stylesheet  样式表
+  
+
+  示例
+   <link href="url路径" rel="stylesheet" type="text/css" media="screen and (max-width:1024px)"/>
+   <link href="common.css" rel="stylesheet" type="text/css" media="print,tv"/>
+
+  
+2、@import
+语法：
+@import url;
+@import url 媒体查询列表; /*一个逗号分隔的 媒体查询 条件列表，满足条件时才引入 CSS。*/
+
+说明：
+指定导入的外部样式表及目标媒体。
+该规则必须在样式表头部最先声明。并且其后的分号是必需的，如果省略了此分号，外部样式表将无法正确导入，并会生成错误信息。
+IE使用@import无法引入超过35条的样式表。使用url(url)和直接使用url需要注意的地方：
+
+
+示例：
+@import url(&quot;global.css&quot;);
+@import url(global.css);
+@import &quot;global.css&quot;;
+@import url("fineprint.css") print;
+@import url("bluish.css") projection, tv;
+@import 'custom.css';
+@import url("chrome://communicator/skin/");
+@import "common.css" screen, projection;
+@import url('mobile.css') (max-width: 680px);
+@import url('landscape.css') screen and (orientation:landscape);
+
+当使用url(url)的方式时，包住路径的引号可有可无；当直接使用url时，包住路径的引号必须保留。
+@import 是 CSS 中的一个@规则，必须先于所有其他类型的规则（@charset 规则除外），结尾需要加分号。
+@import 用于从其他样式表导入样式规则。因为必须要用 CSS 引擎来解析，所以只能出现在 CSS 文件中或 HTML文件的 <style> 标签中。
+常用语模块化开发
+
+3. link 和 @import 异同点
+
+link 是 HTML 文件中的标签，在 <head> 标签中引入 CSS 文件。
+@import 是 CSS 中的一个 @规则，只能出现在 CSS 文件中或 HTML文件的 <style> 标签中。
+@import 和 link 一样，都可以定义媒体查询(media queries)
+
+4. 非模块化开发时尽量不要用 @import
+
+  非模块化开发
+
+@import 引入的样式在所在的 CSS 文件加载完成后再加载，不推荐使用。
+
+正常开发时，所有的 CSS 文件都需要引入。如果在某个 CSS 文件中使用了 @import ，浏览器要先下载使用了 @import 的 CSS，解析完后发现有另外的 CSS 文件需要下载，再去下载、解析，增加了用户的等待时间。 
+如果 CSS 内容不多, 可以合并到一个文件里, 减少请求次数。对于多个独立的 CSS 文件, 最好直接用 link 标签加载。
+
+  模块化开发
+
+在用 webpack 等工具开发时，会合并 CSS 文件。如果 CSS 文件相互之间有依赖，可以直接用也只能用 @import 引入，
+最后构建好的文件会合并文件，不会出现 @import。
